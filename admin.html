@@ -71,10 +71,14 @@ input{display:block;margin:5px 0;padding:8px;width:100%}
 
 </div>
 
+<!-- 🔥 SCRIPT PRINCIPAL -->
 <script type="module">
 
 import { db, collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "./js/firebase.js";
 import { storage, ref, uploadBytes, getDownloadURL } from "./js/firebase.js";
+import "./js/auth.js"; // 🔥 IMPORTANTE (carga auth y window.proteger)
+
+window.proteger(); // 🔥 PROTECCIÓN ACTIVADA
 
 let productos = [];
 let editId = null;
@@ -169,7 +173,6 @@ window.guardar = async function(){
     imagenURL = await getDownloadURL(ruta);
   }
 
-  // mantener imagen si no subes nueva
   if(!imagenURL && editId){
     const actual = productos.find(p => p.id === editId);
     imagenURL = actual.imagen;
@@ -215,12 +218,6 @@ function limpiar(){
   preview.style.display = "none";
 }
 
-</script>
-
-<!-- AUTH -->
-<script type="module">
-  import { proteger } from "./js/auth.js";
-  proteger();
 </script>
 
 </body>
