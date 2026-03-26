@@ -1,4 +1,4 @@
-// 🔥 IMPORTS
+// 🔥 IMPORTS CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 
 import {
@@ -19,38 +19,37 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
 
 
-// 🔥 CONFIG
+// 🔥 CONFIG (la tuya)
 const firebaseConfig = {
-  apiKey: "...",
-  authDomain: "...",
+  apiKey: "AIzaSyAcOHr6ptMyn5dQoqtdmi6FRK4meg6kdzg",
+  authDomain: "dulcesconamor-1e9ad.firebaseapp.com",
   projectId: "dulcesconamor-1e9ad",
-  storageBucket: "dulcesconamor-1e9ad.firebasestorage.app", // ✅ coma aquí
+  storageBucket: "dulcesconamor-1e9ad.firebasestorage.app",
   messagingSenderId: "678245854576",
-  appId: "1:678245854576:web:2648d01824868ac810f3b5",
-  measurementId: "G-3M4LFBF2GL"
+  appId: "1:678245854576:web:2648d01824868ac810f3b5"
 };
 
 
-// 🔥 INICIALIZAR FIREBASE
+// 🔥 INIT
 const app = initializeApp(firebaseConfig);
-
-// 🔥 SERVICIOS
 const db = getFirestore(app);
+
+// ⚠️ IMPORTANTE (lo que arregla tu CORS también)
 const storage = getStorage(app, "gs://dulcesconamor-1e9ad.firebasestorage.app");
 
 
-// 🔥 EXPORTS (CLAVE)
+// 🔥 EXPORTS
 export {
-  app, // 🔥 NECESARIO PARA AUTH
   db,
+  storage,
   collection,
   getDocs,
   addDoc,
   doc,
   updateDoc,
   deleteDoc,
-  storage,
   ref,
   uploadBytes,
-  getDownloadURL
+  getDownloadURL,
+  app
 };
