@@ -15,11 +15,11 @@ collections:
         format: "json"
         fields:
           - label: "Productos"
-            name: "items"
+            name: ""
             widget: "list"
             fields:
-              - { label: "ID", name: "id", widget: "number" }
+              - { label: "ID", name: "id", widget: "string" }
               - { label: "Nombre", name: "nombre", widget: "string" }
               - { label: "Precio", name: "precio", widget: "number" }
               - { label: "Imagen", name: "imagen", widget: "image" }
-              - { label: "Descripción", name: "descripcion", widget: "text" }
+              - { label: "Descripción", name: "descripcion", widget: "list" }
