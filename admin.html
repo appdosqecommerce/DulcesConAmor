@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Panel Admin</title>
+
+<style>
+body{font-family:sans-serif;margin:0;background:#f5f5f5}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#000;
+  color:#fff;
+  padding:15px 20px;
+}
+
+.logout{
+  background:red;
+  color:white;
+  padding:8px 12px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.container{padding:20px}
+
+.card{background:white;padding:15px;margin:10px 0;border-radius:10px}
+button{margin:5px;padding:8px;border:none;border-radius:5px;cursor:pointer}
+.edit{background:#007bff;color:white}
+.delete{background:red;color:white}
+.save{background:#00c851;color:white}
+
+input{display:block;margin:5px 0;padding:8px;width:100%}
+
+#preview{
+  width:150px;
+  margin-top:10px;
+  border-radius:10px;
+  display:none;
+}
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h2>Panel de Productos 🔥</h2>
+  <button class="logout" onclick="logout()">Cerrar sesión</button>
+</div>
+
+<div class="container">
+
+<div id="lista"></div>
+
+<h3>Crear / Editar producto</h3>
+
+<input id="nombre" placeholder="Nombre">
+<input id="precio" placeholder="Precio">
+
+<input type="file" id="imagenFile">
+<img id="preview">
+
+<input id="activo" placeholder="Activo (true/false)">
+
+<button class="save" onclick="guardar()">Guardar</button>
+
+</div>
+
+<script type="module">
+
+import { db, collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "./js/firebase.js";
+import { storage, ref, uploadBytes, getDownloadURL } from "./js/firebase.js";
+
+let productos = [];
+let editId = null;
+
+// 🔥 PREVIEW
+const inputFile = document.getElementById("imagenFile");
+const preview = document.getElementById("preview");
+
+inputFile.addEventListener("change", function () {
+  const file = this.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// 🔥 Cargar productos
+async function cargar(){
+  const snapshot = await getDocs(collection(db, "productos"));
+  productos = [];
+
+  snapshot.forEach(docu => {
+    productos.push({ id: docu.id, ...docu.data() });
+  });
+
+  render();
+}
+
+cargar();
+
+
+// 🔥 Mostrar lista
+function render(){
+  let html = "";
+
+  productos.forEach(p=>{
+    html += `
+      <div class="card">
+        <b>${p.nombre}</b><br>
+        $${p.precio}<br>
+        Estado: ${p.activo !== false ? "Activo" : "Inactivo"}<br>
+
+        <button class="edit" onclick="editar('${p.id}')">Editar</button>
+        <button class="delete" onclick="eliminar('${p.id}')">Eliminar</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("lista").innerHTML = html;
+}
+
+
+// 🔥 Editar
+window.editar = function(id){
+  const p = productos.find(x => x.id === id);
+  editId = id;
+
+  document.getElementById("nombre").value = p.nombre;
+  document.getElementById("precio").value = p.precio;
+  document.getElementById("activo").value = p.activo !== false;
+
+  if(p.imagen){
+    preview.src = p.imagen;
+    preview.style.display = "block";
+  }
+}
+
+
+// 🔥 Guardar
+window.guardar = async function(){
+
+  let nombre = document.getElementById("nombre").value;
+  let precio = Number(document.getElementById("precio").value);
+  let activo = document.getElementById("activo").value === "true";
+
+  if(!nombre || isNaN(precio) || precio <= 0){
+    alert("Precio inválido");
+    return;
+  }
+
+  let imagenURL = "";
+  const file = document.getElementById("imagenFile").files[0];
+
+  if(file){
+    const ruta = ref(storage, "productos/" + Date.now() + "_" + file.name);
+    await uploadBytes(ruta, file);
+    imagenURL = await getDownloadURL(ruta);
+  }
+
+  // mantener imagen si no subes nueva
+  if(!imagenURL && editId){
+    const actual = productos.find(p => p.id === editId);
+    imagenURL = actual.imagen;
+  }
+
+  let producto = {
+    nombre,
+    precio,
+    imagen: imagenURL,
+    activo
+  };
+
+  if(editId){
+    await updateDoc(doc(db, "productos", editId), producto);
+    alert("✏️ Producto actualizado");
+  } else {
+    await addDoc(collection(db, "productos"), producto);
+    alert("✅ Producto creado");
+  }
+
+  editId = null;
+  limpiar();
+  cargar();
+}
+
+
+// 🔥 Eliminar
+window.eliminar = async function(id){
+  if(confirm("¿Eliminar producto?")){
+    await deleteDoc(doc(db, "productos", id));
+    alert("🗑️ Eliminado");
+    cargar();
+  }
+}
+
+
+// 🔥 Limpiar
+function limpiar(){
+  document.getElementById("nombre").value = "";
+  document.getElementById("precio").value = "";
+  document.getElementById("activo").value = "";
+  document.getElementById("imagenFile").value = "";
+  preview.style.display = "none";
+}
+
+</script>
+
+<!-- AUTH -->
+<script type="module" src="js/auth.js"></script>
+
+<script>
+  proteger();
+</script>
+
+</body>
+</html>
