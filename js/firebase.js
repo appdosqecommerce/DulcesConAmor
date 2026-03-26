@@ -21,10 +21,10 @@ import {
 
 // 🔥 CONFIG
 const firebaseConfig = {
-  apiKey: "AIzaSyAcOHr6ptMyn5dQoqtdmi6FRK4meg6kdzg",
-  authDomain: "dulcesconamor-1e9ad.firebaseapp.com",
+  apiKey: "...",
+  authDomain: "...",
   projectId: "dulcesconamor-1e9ad",
-  storageBucket: "dulcesconamor-1e9ad.firebasestorage.app"
+  storageBucket: "dulcesconamor-1e9ad.firebasestorage.app", // ✅ coma aquí
   messagingSenderId: "678245854576",
   appId: "1:678245854576:web:2648d01824868ac810f3b5",
   measurementId: "G-3M4LFBF2GL"
