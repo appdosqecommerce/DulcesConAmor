@@ -24,7 +24,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAcOHr6ptMyn5dQoqtdmi6FRK4meg6kdzg",
   authDomain: "dulcesconamor-1e9ad.firebaseapp.com",
   projectId: "dulcesconamor-1e9ad",
-  storageBucket: "dulcesconamor-1e9ad.appspot.com", // 🔥 IMPORTANTE (ya correcto)
+  storageBucket: "dulcesconamor-1e9ad.firebasestorage.app"
   messagingSenderId: "678245854576",
   appId: "1:678245854576:web:2648d01824868ac810f3b5",
   measurementId: "G-3M4LFBF2GL"
@@ -36,7 +36,7 @@ const app = initializeApp(firebaseConfig);
 
 // 🔥 SERVICIOS
 const db = getFirestore(app);
-const storage = getStorage(app);
+const storage = getStorage(app, "gs://dulcesconamor-1e9ad.firebasestorage.app");
 
 
 // 🔥 EXPORTS (CLAVE)
