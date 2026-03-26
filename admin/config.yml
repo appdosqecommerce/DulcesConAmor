@@ -12,6 +12,7 @@ collections:
       - file: "data/productos_limpio.json"
         label: "Lista de productos"
         name: "productos"
+        format: "json"
         fields:
           - label: "Productos"
             name: "items"
