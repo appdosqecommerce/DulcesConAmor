@@ -3,6 +3,8 @@
    Menú mobile + buscador header
    ================================ */
 
+import { db, collection, getDocs } from "./firebase.js";
+
 /* HAMBURGER MENU */
 const hamburger = document.getElementById('hamburger')
 const menuMobile = document.getElementById('menu-mobile')
@@ -11,7 +13,6 @@ if (hamburger && menuMobile) {
   hamburger.addEventListener('click', () => {
     menuMobile.classList.toggle('open')
   })
-  // Cerrar al hacer clic fuera
   document.addEventListener('click', e => {
     if (!hamburger.contains(e.target) && !menuMobile.contains(e.target)) {
       menuMobile.classList.remove('open')
@@ -20,73 +21,79 @@ if (hamburger && menuMobile) {
 }
 
 
-/* BUSCADOR DEL HEADER — autocomplete en vivo */
+/* 🔥 FUNCIÓN PARA CARGAR PRODUCTOS DESDE FIREBASE */
+async function obtenerProductos() {
+  if (window._productosCache) return window._productosCache;
+
+  const snapshot = await getDocs(collection(db, "productos"));
+  let lista = [];
+
+  snapshot.forEach(doc => {
+    lista.push({ id: doc.id, ...doc.data() });
+  });
+
+  window._productosCache = lista;
+  return lista;
+}
+
+
+/* BUSCADOR DEL HEADER — ahora con Firebase */
 const inputHeader = document.getElementById('buscador-header')
 const resultadosBox = document.getElementById('resultados-busqueda')
 
 if (inputHeader && resultadosBox) {
-  inputHeader.addEventListener('input', e => {
+  inputHeader.addEventListener('input', async e => {
     const texto = e.target.value.trim().toLowerCase()
+
     if (texto.length < 2) {
       resultadosBox.innerHTML = ''
       resultadosBox.classList.remove('visible')
       return
     }
 
-    // Carga productos si no están en memoria global
-    const fuente = window._productosCache
-      ? Promise.resolve(window._productosCache)
-      : fetch('data/productos_limpio.json').then(r => r.json()).then(d => {
-          window._productosCache = d
-          return d
-        })
+    const lista = await obtenerProductos()
 
-    fuente.then(lista => {
-      const encontrados = lista
-        .filter(p => p.nombre.toLowerCase().includes(texto))
-        .slice(0, 6)
+    const encontrados = lista
+      .filter(p => p.nombre.toLowerCase().includes(texto))
+      .slice(0, 6)
 
-      if (encontrados.length === 0) {
-        resultadosBox.innerHTML = '<div style="padding:14px 16px;color:#999;font-size:14px">Sin resultados</div>'
-        resultadosBox.classList.add('visible')
-        return
-      }
-
-      resultadosBox.innerHTML = encontrados.map(p => `
-        <a class="resultado-item" href="producto.html?id=${p.id}">
-          <img src="${p.imagen || 'img/productos/producto-001.jpg'}" alt="${p.nombre}" onerror="this.src='img/productos/producto-001.jpg'">
-          <div class="r-info">
-            <span>${p.nombre}</span>
-            <small>$${Number(p.precio).toLocaleString('es-CO')}</small>
-          </div>
-        </a>
-      `).join('')
+    if (encontrados.length === 0) {
+      resultadosBox.innerHTML = '<div style="padding:14px 16px;color:#999;font-size:14px">Sin resultados</div>'
       resultadosBox.classList.add('visible')
-    })
+      return
+    }
+
+    resultadosBox.innerHTML = encontrados.map(p => `
+      <a class="resultado-item" href="producto.html?id=${p.id}">
+        <img src="${p.imagen || 'img/productos/producto-001.jpg'}">
+        <div class="r-info">
+          <span>${p.nombre}</span>
+          <small>$${Number(p.precio).toLocaleString('es-CO')}</small>
+        </div>
+      </a>
+    `).join('')
+
+    resultadosBox.classList.add('visible')
   })
 
-  // Cerrar al hacer clic fuera
   document.addEventListener('click', e => {
     if (!inputHeader.contains(e.target) && !resultadosBox.contains(e.target)) {
       resultadosBox.classList.remove('visible')
     }
   })
 
-  // Cerrar con Escape
   inputHeader.addEventListener('keydown', e => {
     if (e.key === 'Escape') resultadosBox.classList.remove('visible')
   })
 }
 
 
-/* STICKY HEADER SOMBRA */
+/* STICKY HEADER */
 const header = document.getElementById('header')
 if (header) {
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) {
-      header.style.boxShadow = '0 4px 30px rgba(0,0,0,.1)'
-    } else {
-      header.style.boxShadow = '0 2px 20px rgba(0,0,0,.06)'
-    }
+    header.style.boxShadow = window.scrollY > 10
+      ? '0 4px 30px rgba(0,0,0,.1)'
+      : '0 2px 20px rgba(0,0,0,.06)'
   })
 }
