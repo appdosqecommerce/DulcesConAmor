@@ -224,12 +224,34 @@ ul { list-style: none; }
 .categorias-section { padding: 90px 32px; max-width: 1280px; margin: auto; }
 .grid-categorias { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
 .cat-card { position: relative; border-radius: 20px; overflow: hidden; height: 230px; display: flex; align-items: flex-end; cursor: pointer; transition: transform .35s, box-shadow .35s; box-shadow: 0 6px 20px rgba(200,130,130,.1); }
-.cat-card:hover { transform: translateY(-7px); box-shadow: 0 18px 45px rgba(200,130,130,.22); }
-.cat-card--1 { background: linear-gradient(145deg, #ffd6dd, #ffb3be); }
-.cat-card--2 { background: linear-gradient(145deg, #ffc2ce, #f9879a); }
-.cat-card--3 { background: linear-gradient(145deg, #ffd6c2, #f0a898); }
-.cat-card--4 { background: linear-gradient(145deg, #c8d8f0, #a0b8e0); }
-.cat-card--5 { background: linear-gradient(145deg, #d8f0d0, #a8d8a0); }
+.cat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0.1));
+}
+.cat-card:hover {
+  transform: translateY(-7px) scale(1.02);
+}
+.cat-card--1 {
+  background: url('../img/categorias/desayuno.jpg') center/cover no-repeat;
+}
+
+.cat-card--2 {
+  background: url('../img/categorias/romantico.jpg') center/cover no-repeat;
+}
+
+.cat-card--3 {
+  background: url('../img/categorias/cumpleanos.jpg') center/cover no-repeat;
+}
+
+.cat-card--4 {
+  background: url('../img/categorias/bebidas.jpg') center/cover no-repeat;
+}
+
+.cat-card--5 {
+  background: url('../img/categorias/flores.jpg') center/cover no-repeat;
+}
 .cat-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(90,40,40,.5) 0%, transparent 65%); }
 .cat-content { position: relative; z-index: 2; padding: 18px; color: white; width: 100%; text-shadow: 0 1px 6px rgba(0,0,0,.3); }
 .cat-icon { font-size: 28px; display: block; margin-bottom: 5px; }
