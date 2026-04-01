@@ -47,7 +47,7 @@ function renderCarrito() {
           <button onclick="sumar(${index})">+</button>
         </div>
       </div>
-      <button class="eliminar" onclick="eliminar('${p.id}')" title="Eliminar">✕</button>
+      <button class="eliminar" onclick="eliminar('${p.id}')">✕</button>
     `
     contenedor.appendChild(item)
   })
@@ -71,10 +71,11 @@ function restar(index) {
   }
 }
 
-function eliminar(index) {
-  carrito.splice(index, 1)
-  guardarCarrito()   // 👈 AGREGA ESTO AQUÍ
+function eliminar(id) {
+  carrito = carrito.filter(p => p.id !== id)
+  guardarCarrito()
   renderCarrito()
+}
   mostrarToast("🗑️ Producto eliminado")
 }
 
