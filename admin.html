@@ -5,46 +5,111 @@
 <title>Panel Admin</title>
 
 <style>
-body{font-family:sans-serif;margin:0;background:#f5f5f5}
+body{
+  font-family: Arial, sans-serif;
+  margin:0;
+  background:#f4f6f8;
+}
 
 /* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:#000;
+  background:#111;
   color:#fff;
-  padding:15px 20px;
+  padding:15px 25px;
 }
 
 .logout{
-  background:red;
+  background:#ff4d4d;
   color:white;
-  padding:8px 12px;
+  padding:8px 14px;
   border:none;
-  border-radius:5px;
+  border-radius:6px;
   cursor:pointer;
 }
 
-.container{padding:20px}
+/* LAYOUT */
+.container{
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:20px;
+  padding:20px;
+}
 
-.card{background:white;padding:15px;margin:10px 0;border-radius:10px}
-button{margin:5px;padding:8px;border:none;border-radius:5px;cursor:pointer}
+/* LISTA */
+.card{
+  background:white;
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.card b{font-size:16px}
+
+.actions{
+  margin-top:10px;
+}
+
+button{
+  margin:5px;
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
 .edit{background:#007bff;color:white}
-.delete{background:red;color:white}
-.save{background:#00c851;color:white}
+.delete{background:#ff4d4d;color:white}
+
+/* FORM */
+.form{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+  position:sticky;
+  top:20px;
+}
+
+.form h3{
+  margin-bottom:15px;
+}
+
+label{
+  font-size:13px;
+  color:#555;
+}
 
 input, select{
-  display:block;
-  margin:5px 0;
-  padding:8px;
   width:100%;
+  padding:10px;
+  margin:6px 0 12px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+
+.save{
+  width:100%;
+  padding:12px;
+  background:#00c851;
+  color:white;
+  font-weight:bold;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.save:hover{
+  background:#00a844;
 }
 
 #preview{
-  width:150px;
-  margin-top:10px;
+  width:100%;
   border-radius:10px;
+  margin-top:10px;
   display:none;
 }
 </style>
@@ -52,7 +117,6 @@ input, select{
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <h2>Panel de Productos 🔥</h2>
   <button class="logout" onclick="logout()">Cerrar sesión</button>
@@ -60,13 +124,21 @@ input, select{
 
 <div class="container">
 
+<!-- LISTA -->
 <div id="lista"></div>
+
+<!-- FORM -->
+<div class="form">
 
 <h3>Crear / Editar producto</h3>
 
-<input id="nombre" placeholder="Nombre">
-<input id="precio" placeholder="Precio">
+<label>Nombre</label>
+<input id="nombre">
 
+<label>Precio</label>
+<input id="precio">
+
+<label>Categoría</label>
 <select id="categoria">
   <option value="desayuno">Desayuno</option>
   <option value="romantico">Romántico</option>
@@ -76,12 +148,19 @@ input, select{
   <option value="vino">Vinos</option>
 </select>
 
+<label>Imagen</label>
 <input type="file" id="imagenFile">
 <img id="preview">
 
-<input id="activo" placeholder="Activo (true/false)">
+<label>Estado</label>
+<select id="activo">
+  <option value="true">Activo</option>
+  <option value="false">Inactivo</option>
+</select>
 
-<button class="save" onclick="guardar()">Guardar</button>
+<button class="save" onclick="guardar()">Guardar producto</button>
+
+</div>
 
 </div>
 
@@ -96,7 +175,7 @@ window.proteger();
 let productos = [];
 let editId = null;
 
-// PREVIEW IMAGEN
+// PREVIEW
 const inputFile = document.getElementById("imagenFile");
 const preview = document.getElementById("preview");
 
@@ -113,7 +192,7 @@ inputFile.addEventListener("change", function () {
   }
 });
 
-// CARGAR PRODUCTOS
+// CARGAR
 async function cargar(){
   const snapshot = await getDocs(collection(db, "productos"));
   productos = [];
@@ -127,7 +206,7 @@ async function cargar(){
 
 cargar();
 
-// MOSTRAR LISTA
+// RENDER
 function render(){
   let html = "";
 
@@ -139,8 +218,10 @@ function render(){
         Categoría: ${p.categoria || "Sin categoría"}<br>
         Estado: ${p.activo !== false ? "Activo" : "Inactivo"}<br>
 
-        <button class="edit" onclick="editar('${p.id}')">Editar</button>
-        <button class="delete" onclick="eliminar('${p.id}')">Eliminar</button>
+        <div class="actions">
+          <button class="edit" onclick="editar('${p.id}')">Editar</button>
+          <button class="delete" onclick="eliminar('${p.id}')">Eliminar</button>
+        </div>
       </div>
     `;
   });
@@ -155,8 +236,8 @@ window.editar = function(id){
 
   document.getElementById("nombre").value = p.nombre;
   document.getElementById("precio").value = p.precio;
-  document.getElementById("activo").value = p.activo !== false;
   document.getElementById("categoria").value = p.categoria || "desayuno";
+  document.getElementById("activo").value = p.activo !== false;
 
   if(p.imagen){
     preview.src = p.imagen;
@@ -225,7 +306,7 @@ window.eliminar = async function(id){
 function limpiar(){
   document.getElementById("nombre").value = "";
   document.getElementById("precio").value = "";
-  document.getElementById("activo").value = "";
+  document.getElementById("activo").value = "true";
   document.getElementById("categoria").value = "desayuno";
   document.getElementById("imagenFile").value = "";
   preview.style.display = "none";
