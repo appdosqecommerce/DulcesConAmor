@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Panel Admin</title>
+<title>Admin Dulces Pro</title>
 
 <style>
 body{
@@ -13,19 +13,19 @@ body{
 
 /* HEADER */
 .header{
+  background:#111;
+  color:white;
+  padding:15px 25px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:#111;
-  color:#fff;
-  padding:15px 25px;
 }
 
 .logout{
   background:#ff4d4d;
-  color:white;
-  padding:8px 14px;
   border:none;
+  padding:8px 14px;
+  color:white;
   border-radius:6px;
   cursor:pointer;
 }
@@ -33,21 +33,42 @@ body{
 /* LAYOUT */
 .container{
   display:grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr 380px;
   gap:20px;
   padding:20px;
 }
 
-/* LISTA */
+/* BUSCADOR */
+.search{
+  margin-bottom:10px;
+}
+
+.search input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+
+/* CARD */
 .card{
   background:white;
   padding:15px;
-  margin-bottom:10px;
   border-radius:12px;
+  margin-bottom:10px;
   box-shadow:0 2px 10px rgba(0,0,0,.05);
 }
 
-.card b{font-size:16px}
+.badge{
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:12px;
+  display:inline-block;
+  margin-top:5px;
+}
+
+.activo{background:#d4f8e8;color:#008a4e}
+.inactivo{background:#ffd6d6;color:#c10000}
 
 .actions{
   margin-top:10px;
@@ -63,6 +84,7 @@ button{
 
 .edit{background:#007bff;color:white}
 .delete{background:#ff4d4d;color:white}
+.toggle{background:#ffc107;color:black}
 
 /* FORM */
 .form{
@@ -74,14 +96,7 @@ button{
   top:20px;
 }
 
-.form h3{
-  margin-bottom:15px;
-}
-
-label{
-  font-size:13px;
-  color:#555;
-}
+label{font-size:13px;color:#555}
 
 input, select{
   width:100%;
@@ -97,40 +112,41 @@ input, select{
   background:#00c851;
   color:white;
   font-weight:bold;
-  border:none;
   border-radius:8px;
-  cursor:pointer;
-}
-
-.save:hover{
-  background:#00a844;
 }
 
 #preview{
   width:100%;
   border-radius:10px;
-  margin-top:10px;
   display:none;
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="header">
-  <h2>Panel de Productos 🔥</h2>
+  <h2>Admin Dulces 🍓</h2>
   <button class="logout" onclick="logout()">Cerrar sesión</button>
 </div>
 
 <div class="container">
 
-<!-- LISTA -->
+<!-- IZQUIERDA -->
+<div>
+
+<div class="search">
+  <input id="buscador" placeholder="Buscar producto...">
+</div>
+
 <div id="lista"></div>
+
+</div>
 
 <!-- FORM -->
 <div class="form">
 
-<h3>Crear / Editar producto</h3>
+<h3>Producto</h3>
 
 <label>Nombre</label>
 <input id="nombre">
@@ -179,137 +195,134 @@ let editId = null;
 const inputFile = document.getElementById("imagenFile");
 const preview = document.getElementById("preview");
 
-inputFile.addEventListener("change", function () {
-  const file = this.files[0];
-
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      preview.src = e.target.result;
-      preview.style.display = "block";
-    };
-    reader.readAsDataURL(file);
+inputFile.addEventListener("change", e=>{
+  const file = e.target.files[0];
+  if(file){
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
   }
 });
 
 // CARGAR
 async function cargar(){
-  const snapshot = await getDocs(collection(db, "productos"));
+  const snap = await getDocs(collection(db,"productos"));
   productos = [];
-
-  snapshot.forEach(docu => {
-    productos.push({ id: docu.id, ...docu.data() });
-  });
-
+  snap.forEach(d=>productos.push({id:d.id,...d.data()}));
   render();
 }
 
 cargar();
 
+// BUSCADOR
+document.getElementById("buscador").addEventListener("input", e=>{
+  const t = e.target.value.toLowerCase();
+  const filtrados = productos.filter(p=>p.nombre.toLowerCase().includes(t));
+  render(filtrados);
+});
+
 // RENDER
-function render(){
-  let html = "";
+function render(lista = productos){
+  document.getElementById("lista").innerHTML = lista.map(p=>`
+    <div class="card">
+      <b>${p.nombre}</b><br>
+      $${p.precio}<br>
+      ${p.categoria || ""}<br>
 
-  productos.forEach(p=>{
-    html += `
-      <div class="card">
-        <b>${p.nombre}</b><br>
-        $${p.precio}<br>
-        Categoría: ${p.categoria || "Sin categoría"}<br>
-        Estado: ${p.activo !== false ? "Activo" : "Inactivo"}<br>
+      <span class="badge ${p.activo !== false ? "activo":"inactivo"}">
+        ${p.activo !== false ? "Activo":"Inactivo"}
+      </span>
 
-        <div class="actions">
-          <button class="edit" onclick="editar('${p.id}')">Editar</button>
-          <button class="delete" onclick="eliminar('${p.id}')">Eliminar</button>
-        </div>
+      <div class="actions">
+        <button class="edit" onclick="editar('${p.id}')">Editar</button>
+        <button class="toggle" onclick="toggle('${p.id}')">Estado</button>
+        <button class="delete" onclick="eliminar('${p.id}')">Eliminar</button>
       </div>
-    `;
-  });
-
-  document.getElementById("lista").innerHTML = html;
+    </div>
+  `).join("");
 }
 
 // EDITAR
-window.editar = function(id){
-  const p = productos.find(x => x.id === id);
-  editId = id;
+window.editar = id=>{
+  const p = productos.find(x=>x.id===id);
+  editId=id;
 
-  document.getElementById("nombre").value = p.nombre;
-  document.getElementById("precio").value = p.precio;
-  document.getElementById("categoria").value = p.categoria || "desayuno";
-  document.getElementById("activo").value = p.activo !== false;
+  nombre.value=p.nombre;
+  precio.value=p.precio;
+  categoria.value=p.categoria||"desayuno";
+  activo.value=p.activo!==false;
 
   if(p.imagen){
-    preview.src = p.imagen;
-    preview.style.display = "block";
+    preview.src=p.imagen;
+    preview.style.display="block";
   }
-}
+};
+
+// TOGGLE ACTIVO
+window.toggle = async id=>{
+  const p = productos.find(x=>x.id===id);
+  await updateDoc(doc(db,"productos",id),{
+    activo: p.activo===false
+  });
+  cargar();
+};
 
 // GUARDAR
-window.guardar = async function(){
+window.guardar = async ()=>{
+  let nombreV = nombre.value;
+  let precioV = Number(precio.value);
+  let categoriaV = categoria.value;
+  let activoV = activo.value==="true";
 
-  let nombre = document.getElementById("nombre").value;
-  let precio = Number(document.getElementById("precio").value);
-  let categoria = document.getElementById("categoria").value;
-  let activo = document.getElementById("activo").value === "true";
+  if(!nombreV || precioV<=0) return alert("Datos inválidos");
 
-  if(!nombre || isNaN(precio) || precio <= 0){
-    alert("Precio inválido");
-    return;
-  }
-
-  let imagenURL = "";
-  const file = document.getElementById("imagenFile").files[0];
+  let imagenURL="";
+  const file = imagenFile.files[0];
 
   if(file){
-    const ruta = ref(storage, "productos/" + Date.now() + "_" + file.name);
-    await uploadBytes(ruta, file);
+    const ruta = ref(storage,"productos/"+Date.now()+"_"+file.name);
+    await uploadBytes(ruta,file);
     imagenURL = await getDownloadURL(ruta);
   }
 
   if(!imagenURL && editId){
-    const actual = productos.find(p => p.id === editId);
-    imagenURL = actual.imagen;
+    imagenURL = productos.find(p=>p.id===editId).imagen;
   }
 
-  let producto = {
-    nombre,
-    precio,
-    categoria,
-    imagen: imagenURL,
-    activo
+  const data = {
+    nombre:nombreV,
+    precio:precioV,
+    categoria:categoriaV,
+    activo:activoV,
+    imagen:imagenURL
   };
 
   if(editId){
-    await updateDoc(doc(db, "productos", editId), producto);
-    alert("✏️ Producto actualizado");
-  } else {
-    await addDoc(collection(db, "productos"), producto);
-    alert("✅ Producto creado");
+    await updateDoc(doc(db,"productos",editId),data);
+  }else{
+    await addDoc(collection(db,"productos"),data);
   }
 
-  editId = null;
   limpiar();
   cargar();
-}
+};
 
 // ELIMINAR
-window.eliminar = async function(id){
-  if(confirm("¿Eliminar producto?")){
-    await deleteDoc(doc(db, "productos", id));
-    alert("🗑️ Eliminado");
+window.eliminar = async id=>{
+  if(confirm("Eliminar?")){
+    await deleteDoc(doc(db,"productos",id));
     cargar();
   }
-}
+};
 
 // LIMPIAR
 function limpiar(){
-  document.getElementById("nombre").value = "";
-  document.getElementById("precio").value = "";
-  document.getElementById("activo").value = "true";
-  document.getElementById("categoria").value = "desayuno";
-  document.getElementById("imagenFile").value = "";
-  preview.style.display = "none";
+  nombre.value="";
+  precio.value="";
+  categoria.value="desayuno";
+  activo.value="true";
+  imagenFile.value="";
+  preview.style.display="none";
+  editId=null;
 }
 
 </script>
