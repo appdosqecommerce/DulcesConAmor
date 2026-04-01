@@ -34,7 +34,12 @@ button{margin:5px;padding:8px;border:none;border-radius:5px;cursor:pointer}
 .delete{background:red;color:white}
 .save{background:#00c851;color:white}
 
-input{display:block;margin:5px 0;padding:8px;width:100%}
+input, select{
+  display:block;
+  margin:5px 0;
+  padding:8px;
+  width:100%;
+}
 
 #preview{
   width:150px;
@@ -62,6 +67,15 @@ input{display:block;margin:5px 0;padding:8px;width:100%}
 <input id="nombre" placeholder="Nombre">
 <input id="precio" placeholder="Precio">
 
+<select id="categoria">
+  <option value="desayuno">Desayuno</option>
+  <option value="romantico">Romántico</option>
+  <option value="cumpleanos">Cumpleaños</option>
+  <option value="flores">Flores</option>
+  <option value="cerveza">Cervezas</option>
+  <option value="vino">Vinos</option>
+</select>
+
 <input type="file" id="imagenFile">
 <img id="preview">
 
@@ -71,19 +85,18 @@ input{display:block;margin:5px 0;padding:8px;width:100%}
 
 </div>
 
-<!-- 🔥 SCRIPT PRINCIPAL -->
 <script type="module">
 
 import { db, collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "./js/firebase.js";
 import { storage, ref, uploadBytes, getDownloadURL } from "./js/firebase.js";
-import "./js/auth.js"; // 🔥 IMPORTANTE (carga auth y window.proteger)
+import "./js/auth.js";
 
-window.proteger(); // 🔥 PROTECCIÓN ACTIVADA
+window.proteger();
 
 let productos = [];
 let editId = null;
 
-// 🔥 PREVIEW
+// PREVIEW IMAGEN
 const inputFile = document.getElementById("imagenFile");
 const preview = document.getElementById("preview");
 
@@ -100,7 +113,7 @@ inputFile.addEventListener("change", function () {
   }
 });
 
-// 🔥 Cargar productos
+// CARGAR PRODUCTOS
 async function cargar(){
   const snapshot = await getDocs(collection(db, "productos"));
   productos = [];
@@ -114,8 +127,7 @@ async function cargar(){
 
 cargar();
 
-
-// 🔥 Mostrar lista
+// MOSTRAR LISTA
 function render(){
   let html = "";
 
@@ -124,6 +136,7 @@ function render(){
       <div class="card">
         <b>${p.nombre}</b><br>
         $${p.precio}<br>
+        Categoría: ${p.categoria || "Sin categoría"}<br>
         Estado: ${p.activo !== false ? "Activo" : "Inactivo"}<br>
 
         <button class="edit" onclick="editar('${p.id}')">Editar</button>
@@ -135,8 +148,7 @@ function render(){
   document.getElementById("lista").innerHTML = html;
 }
 
-
-// 🔥 Editar
+// EDITAR
 window.editar = function(id){
   const p = productos.find(x => x.id === id);
   editId = id;
@@ -144,6 +156,7 @@ window.editar = function(id){
   document.getElementById("nombre").value = p.nombre;
   document.getElementById("precio").value = p.precio;
   document.getElementById("activo").value = p.activo !== false;
+  document.getElementById("categoria").value = p.categoria || "desayuno";
 
   if(p.imagen){
     preview.src = p.imagen;
@@ -151,12 +164,12 @@ window.editar = function(id){
   }
 }
 
-
-// 🔥 Guardar
+// GUARDAR
 window.guardar = async function(){
 
   let nombre = document.getElementById("nombre").value;
   let precio = Number(document.getElementById("precio").value);
+  let categoria = document.getElementById("categoria").value;
   let activo = document.getElementById("activo").value === "true";
 
   if(!nombre || isNaN(precio) || precio <= 0){
@@ -181,6 +194,7 @@ window.guardar = async function(){
   let producto = {
     nombre,
     precio,
+    categoria,
     imagen: imagenURL,
     activo
   };
@@ -198,8 +212,7 @@ window.guardar = async function(){
   cargar();
 }
 
-
-// 🔥 Eliminar
+// ELIMINAR
 window.eliminar = async function(id){
   if(confirm("¿Eliminar producto?")){
     await deleteDoc(doc(db, "productos", id));
@@ -208,12 +221,12 @@ window.eliminar = async function(id){
   }
 }
 
-
-// 🔥 Limpiar
+// LIMPIAR
 function limpiar(){
   document.getElementById("nombre").value = "";
   document.getElementById("precio").value = "";
   document.getElementById("activo").value = "";
+  document.getElementById("categoria").value = "desayuno";
   document.getElementById("imagenFile").value = "";
   preview.style.display = "none";
 }
