@@ -3,7 +3,7 @@
    Vista y gestión del carrito
    ================================ */
 
-carrito = JSON.parse(localStorage.getItem('carrito')) || []
+let carrito = JSON.parse(localStorage.getItem('carrito')) || []
 
 const contenedor = document.getElementById('lista-carrito')
 const totalTexto = document.getElementById('total')
@@ -59,19 +59,23 @@ function renderCarrito() {
 
 function sumar(index) {
   carrito[index].cantidad = (carrito[index].cantidad || 1) + 1
+  guardarCarrito()
   renderCarrito()
 }
 
 function restar(index) {
   if ((carrito[index].cantidad || 1) > 1) {
     carrito[index].cantidad--
+    guardarCarrito()
     renderCarrito()
   }
 }
 
 function eliminar(index) {
   carrito.splice(index, 1)
+  guardarCarrito()
   renderCarrito()
+  mostrarToast("🗑️ Producto eliminado")
 }
 
 /* Botón pagar por WhatsApp */
