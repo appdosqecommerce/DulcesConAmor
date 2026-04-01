@@ -47,15 +47,27 @@ function renderCarrito() {
           <button onclick="sumar(${index})">+</button>
         </div>
       </div>
-      <button class="eliminar" onclick="eliminar(${index})" title="Eliminar">✕</button>
+      <button class="eliminar" data-index="${index}">✕</button>
     `
     contenedor.appendChild(item)
+  })
+
+  // 🔥 IMPORTANTE: eventos después de render
+  document.querySelectorAll(".eliminar").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const index = Number(e.currentTarget.dataset.index)
+      eliminar(index)
+    })
   })
 
   totalTexto.innerText = 'Total: $' + total.toLocaleString('es-CO')
   guardarCarrito()
   actualizarContador()
 }
+
+/* ================================
+   FUNCIONES
+   ================================ */
 
 function sumar(index) {
   carrito[index].cantidad = (carrito[index].cantidad || 1) + 1
@@ -75,22 +87,31 @@ function eliminar(index) {
   carrito.splice(index, 1)
   guardarCarrito()
   renderCarrito()
-  mostrarToast("🗑️ Producto eliminado")
 }
 
-/* Botón pagar por WhatsApp */
+/* ================================
+   BOTÓN WHATSAPP
+   ================================ */
+
 const btnPagar = document.getElementById('pagar')
+
 if (btnPagar) {
   btnPagar.addEventListener('click', () => {
     if (carrito.length === 0) {
       alert('Tu carrito está vacío')
       return
     }
+
     const lineas = carrito.map(p =>
       `• ${p.nombre} x${p.cantidad || 1} = $${(Number(p.precio) * (p.cantidad || 1)).toLocaleString('es-CO')}`
     )
-    const total = carrito.reduce((acc, p) => acc + Number(p.precio) * (p.cantidad || 1), 0)
+
+    const total = carrito.reduce((acc, p) =>
+      acc + Number(p.precio) * (p.cantidad || 1), 0
+    )
+
     const msg = `Hola! 👋 Quiero hacer este pedido:\n\n${lineas.join('\n')}\n\n💰 *Total: $${total.toLocaleString('es-CO')}*`
+
     window.open('https://wa.me/573164998444?text=' + encodeURIComponent(msg), '_blank')
   })
 }
