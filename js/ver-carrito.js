@@ -3,7 +3,7 @@
    Vista y gestión del carrito
    ================================ */
 
-let carrito = JSON.parse(localStorage.getItem('carrito')) || []
+carrito = JSON.parse(localStorage.getItem('carrito')) || []
 
 const contenedor = document.getElementById('lista-carrito')
 const totalTexto = document.getElementById('total')
