@@ -71,9 +71,9 @@ function restar(index) {
   }
 }
 
-function eliminar(id) {
-  carrito = carrito.filter(p => p.id !== id)
-  guardarCarrito()
+function eliminar(index) {
+  carrito.splice(index, 1)
+  guardarCarrito()   // 👈 AGREGA ESTO AQUÍ
   renderCarrito()
   mostrarToast("🗑️ Producto eliminado")
 }
