@@ -8,6 +8,263 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilos.css">
 <link rel="icon" href="favicon.ico">
+<style>
+/* ── OVERRIDES & NEW MINIMALIST SECTIONS ── */
+
+/* PROMO BAR — sin emojis, con íconos SVG finos */
+.promo-inner span { display: flex; align-items: center; gap: 7px; }
+.promo-inner .pi-icon { width: 15px; height: 15px; flex-shrink: 0; }
+
+/* ── CÓMO COMPRAR — estilo minimalista con íconos SVG ── */
+.como-comprar-section {
+  padding: 100px 32px;
+  background: var(--crema);
+  text-align: center;
+}
+.pasos-minimalist {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0;
+  max-width: 900px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.paso-min {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 120px;
+  padding: 0 16px;
+  position: relative;
+}
+.paso-min::after {
+  content: '';
+  position: absolute;
+  top: 34px;
+  right: -1px;
+  width: 2px;
+  height: 28px;
+  background: var(--rosa-light);
+}
+.paso-min:last-child::after { display: none; }
+.paso-min-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--rosa-pale);
+  border: 1.5px solid var(--rosa-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .3s, background .3s;
+}
+.paso-min-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--rosa-dark);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.paso-min:hover .paso-min-icon {
+  transform: translateY(-4px);
+  background: var(--rosa-light);
+}
+.paso-min-num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--rosa-dark);
+}
+.paso-min-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--marron);
+  line-height: 1.6;
+}
+
+/* Connector line between steps on desktop */
+.paso-connector {
+  flex: 0 0 40px;
+  height: 1px;
+  background: linear-gradient(to right, var(--rosa-light), var(--rosa));
+  margin-top: 34px;
+  align-self: flex-start;
+}
+
+/* ── PROCESO WA — reemplaza emojis con SVGs ── */
+.proceso-section .paso-icon-svg {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+.proceso-section .paso-icon-svg svg {
+  width: 40px;
+  height: 40px;
+  stroke: rgba(255,255,255,.9);
+  fill: none;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── WHATSAPP FLOTANTE — con logotipo de la marca ── */
+.whatsapp-float {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 900;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  animation: none;
+}
+.wa-float-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1.5px solid var(--rosa-light);
+  border-radius: 50px;
+  padding: 10px 20px 10px 14px;
+  box-shadow: 0 8px 30px rgba(196,114,133,.25);
+  transition: transform .25s, box-shadow .25s;
+  animation: floatPulse 3s ease-in-out infinite;
+}
+.wa-float-inner:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(196,114,133,.35);
+}
+.wa-float-logo {
+  font-family: 'Dancing Script', cursive;
+  font-size: 14px;
+  color: var(--rosa-dark);
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1;
+}
+.wa-float-wa {
+  width: 32px;
+  height: 32px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.wa-float-wa svg { width: 18px; height: 18px; fill: white; }
+
+/* ── BOTÓN "PEDIR POR WHATSAPP" CON LOGO ── */
+.btn-hero-outline-branded {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid rgba(155,107,90,.4);
+  color: var(--marron);
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(6px);
+  transition: .3s;
+}
+.btn-hero-outline-branded:hover {
+  background: white;
+  border-color: var(--rosa-dark);
+  color: var(--rosa-dark);
+}
+.btn-hero-logo {
+  font-family: 'Dancing Script', cursive;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--rosa-dark);
+  line-height: 1;
+  border-right: 1px solid var(--rosa-light);
+  padding-right: 10px;
+}
+.btn-hero-wa-circle {
+  width: 26px;
+  height: 26px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-hero-wa-circle svg { width: 15px; height: 15px; fill: white; }
+
+/* ── REDES SOCIALES MINIMALISTAS EN FOOTER ── */
+.footer-social { display: flex; gap: 12px; margin-top: 16px; }
+.social-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 30px;
+  padding: 7px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  transition: .2s;
+}
+.social-pill:hover { background: rgba(255,255,255,.18); color: white; }
+.social-pill svg { width: 14px; height: 14px; fill: currentColor; }
+
+/* ── BOTÓN WA EN SECCIÓN HERO BOTTOM ── */
+.hero-wa-btn-branded {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1.5px solid var(--rosa-light);
+  padding: 11px 22px;
+  border-radius: 50px;
+  transition: .3s;
+  box-shadow: 0 4px 16px rgba(200,130,130,.12);
+  text-decoration: none;
+}
+.hero-wa-btn-branded:hover { box-shadow: 0 8px 26px rgba(196,114,133,.22); transform: translateY(-2px); }
+.hero-wa-btn-branded .logo-script { font-family: 'Dancing Script', cursive; font-size: 15px; font-weight: 700; color: var(--rosa-dark); line-height: 1; }
+.hero-wa-btn-branded .divider { width: 1px; height: 18px; background: var(--rosa-light); }
+.hero-wa-btn-branded .wa-circle { width: 26px; height: 26px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.hero-wa-btn-branded .wa-circle svg { width: 15px; height: 15px; fill: white; }
+.hero-wa-btn-branded .wa-text { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--marron); }
+
+@keyframes floatPulse {
+  0%, 100% { box-shadow: 0 8px 30px rgba(196,114,133,.25); }
+  50% { box-shadow: 0 12px 40px rgba(196,114,133,.4); }
+}
+
+@media (max-width: 768px) {
+  .pasos-minimalist { gap: 32px 0; }
+  .paso-min::after { display: none; }
+  .paso-connector { display: none; }
+  .pasos-minimalist { flex-wrap: wrap; }
+  .paso-min { min-width: 45%; }
+  .whatsapp-float { bottom: 20px; right: 16px; }
+  .wa-float-logo { display: none; }
+  .wa-float-inner { padding: 12px; }
+}
+</style>
 </head>
 <body>
 
@@ -26,12 +283,10 @@
         <span class="logo-sub">Pereira</span>
       </div>
     </a>
-
     <div class="header-buscador">
       <input type="text" id="buscador-header" placeholder="Buscar desayunos, flores…" autocomplete="off">
       <div id="resultados-busqueda" class="resultados-busqueda"></div>
     </div>
-
     <nav class="menu-desktop">
       <a href="index.html" class="menu-link">Inicio</a>
       <div class="menu-item dropdown">
@@ -74,7 +329,6 @@
       <a href="productos.html" class="menu-link">Tienda</a>
       <a href="#contacto" class="menu-link">Contacto</a>
     </nav>
-
     <div class="header-acciones">
       <a href="https://wa.me/573164998444" class="btn-wa-header" target="_blank">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -92,29 +346,34 @@
 
 <!-- MENÚ MOBILE -->
 <div class="menu-mobile" id="menu-mobile">
-  <a href="index.html">🏠 Inicio</a>
-  <a href="productos.html">🛍 Tienda</a>
-  <a href="productos.html?cat=desayuno">🍳 Desayunos</a>
-  <a href="productos.html?cat=romantico">🌹 Románticos</a>
-  <a href="productos.html?cat=cumpleanos">🎂 Cumpleaños</a>
-  <a href="productos.html?cat=flores">💐 Flores</a>
-  <a href="productos.html?cat=cerveza">🍺 Cervezas</a>
-  <a href="carrito.html">🛒 Carrito</a>
-  <a href="https://wa.me/573164998444" target="_blank">💬 WhatsApp</a>
+  <a href="index.html">Inicio</a>
+  <a href="productos.html">Tienda</a>
+  <a href="productos.html?cat=desayuno">Desayunos</a>
+  <a href="productos.html?cat=romantico">Románticos</a>
+  <a href="productos.html?cat=cumpleanos">Cumpleaños</a>
+  <a href="productos.html?cat=flores">Flores</a>
+  <a href="productos.html?cat=cerveza">Cervezas</a>
+  <a href="carrito.html">Carrito</a>
+  <a href="https://wa.me/573164998444" target="_blank">WhatsApp</a>
 </div>
-
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <p class="hero-badge">✨ Envíos a todo Pereira</p>
+    <p class="hero-badge">✦ Envíos a todo Pereira</p>
     <h1>Desayunos que enamoran</h1>
     <p class="hero-sub">Sorprende a quien más quieres con un detalle<br>preparado con todo el amor del mundo</p>
     <div class="hero-btns">
       <a href="productos.html" class="btn-hero-primary">Ver catálogo</a>
-      <a href="https://wa.me/573164998444" class="btn-hero-outline" target="_blank">
-        💬 Pedir por WhatsApp
+      <!-- Branded WhatsApp button with logo -->
+      <a href="https://wa.me/573164998444" class="hero-wa-btn-branded" target="_blank">
+        <span class="logo-script">Dulces con Amor</span>
+        <span class="divider"></span>
+        <span class="wa-circle">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </span>
+        <span class="wa-text">Pedir ahora</span>
       </a>
     </div>
   </div>
@@ -122,16 +381,44 @@
 </section>
 
 
-<!-- PROMO BAR -->
+<!-- PROMO BAR — íconos SVG minimalistas -->
 <div class="promo-bar">
   <div class="promo-inner">
-    <span>🎁 Desayunos desde $58.000</span>
-    <span>·</span>
-    <span>🌹 Flores y detalles</span>
-    <span>·</span>
-    <span>🍺 Con cervezas y vinos</span>
-    <span>·</span>
-    <span>🎂 Cumpleaños especiales</span>
+    <span>
+      <!-- Gift / breakfast icon -->
+      <svg class="pi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9h18v3H3zM12 9V21M8 9c0-2 1-4 4-4s4 2 4 4"/>
+      </svg>
+      Desayunos desde $58.000
+    </span>
+    <span class="promo-dot">·</span>
+    <span>
+      <!-- Flower/petal icon -->
+      <svg class="pi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-4 0V4a2 2 0 0 1 2-2zM12 22a2 2 0 0 1-2-2v-2a2 2 0 0 1 4 0v2a2 2 0 0 1-2 2zM2 12a2 2 0 0 1 2-2h2a2 2 0 0 1 0 4H4a2 2 0 0 1-2-2zM22 12a2 2 0 0 1-2 2h-2a2 2 0 0 1 0-4h2a2 2 0 0 1 2 2z"/>
+      </svg>
+      Flores y detalles
+    </span>
+    <span class="promo-dot">·</span>
+    <span>
+      <!-- Bottle icon -->
+      <svg class="pi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3h8M9 3v3l-2 3v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V9l-2-3V3"/>
+        <path d="M7 14h10"/>
+      </svg>
+      Con cervezas y vinos
+    </span>
+    <span class="promo-dot">·</span>
+    <span>
+      <!-- Cake/birthday icon -->
+      <svg class="pi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/>
+        <path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/>
+        <path d="M2 21h20M12 3v3M9 6c0-1.7 1.3-3 3-3s3 1.3 3 3"/>
+      </svg>
+      Cumpleaños especiales
+    </span>
   </div>
 </div>
 
@@ -172,7 +459,7 @@
       <div class="cat-content">
         <span class="cat-icon">🍺</span>
         <h3>Con Bebidas</h3>
-        <p>Cervezas & vinos</p>
+        <p>Cervezas &amp; vinos</p>
       </div>
     </a>
     <a href="productos.html?cat=flores" class="cat-card cat-card--5">
@@ -200,37 +487,106 @@
 </section>
 
 
-<!-- CÓMO COMPRAR — estilo Palo Rosa -->
+<!-- CÓMO COMPRAR — NUEVO DISEÑO MINIMALISTA -->
 <section class="como-comprar-section">
   <div class="section-header">
     <p class="section-label">Súper fácil</p>
     <h2>¿Cómo comprar?</h2>
   </div>
-  <div class="pasos-grid">
-    <div class="paso-card">
-      <div class="paso-circulo">👆</div>
-      <p>Elige un<br>producto</p>
+  <div class="pasos-minimalist">
+
+    <!-- Paso 1 -->
+    <div class="paso-min">
+      <div class="paso-min-icon">
+        <svg viewBox="0 0 24 24">
+          <!-- Touch/finger icon -->
+          <path d="M9 11V6a2 2 0 0 1 4 0v5"/>
+          <path d="M13 11V8a2 2 0 0 1 4 0v3"/>
+          <path d="M17 11v-1a2 2 0 0 1 4 0v4c0 3.3-2.7 6-6 6h-2a6 6 0 0 1-5.2-3l-2.3-4a2 2 0 1 1 3.5-2L9 11"/>
+        </svg>
+      </div>
+      <span class="paso-min-num">01</span>
+      <span class="paso-min-label">Elige un<br>producto</span>
     </div>
-    <div class="paso-card">
-      <div class="paso-circulo">🛒</div>
-      <p>Añade al<br>carrito</p>
+
+    <div class="paso-connector"></div>
+
+    <!-- Paso 2 -->
+    <div class="paso-min">
+      <div class="paso-min-icon">
+        <svg viewBox="0 0 24 24">
+          <!-- Shopping bag -->
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
+      <span class="paso-min-num">02</span>
+      <span class="paso-min-label">Añádelo<br>al carrito</span>
     </div>
-    <div class="paso-card">
-      <div class="paso-circulo">📋</div>
-      <p>Completa<br>los datos</p>
+
+    <div class="paso-connector"></div>
+
+    <!-- Paso 3 -->
+    <div class="paso-min">
+      <div class="paso-min-icon">
+        <svg viewBox="0 0 24 24">
+          <!-- Clipboard/form -->
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+          <line x1="9" y1="12" x2="15" y2="12"/>
+          <line x1="9" y1="16" x2="13" y2="16"/>
+        </svg>
+      </div>
+      <span class="paso-min-num">03</span>
+      <span class="paso-min-label">Completa<br>tus datos</span>
     </div>
-    <div class="paso-card">
-      <div class="paso-circulo">💳</div>
-      <p>Realiza<br>el pago</p>
+
+    <div class="paso-connector"></div>
+
+    <!-- Paso 4 -->
+    <div class="paso-min">
+      <div class="paso-min-icon">
+        <svg viewBox="0 0 24 24">
+          <!-- Credit card -->
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+          <line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+      </div>
+      <span class="paso-min-num">04</span>
+      <span class="paso-min-label">Realiza<br>el pago</span>
     </div>
-    <div class="paso-card">
-      <div class="paso-circulo">💌</div>
-      <p>Recibe<br>confirmación</p>
+
+    <div class="paso-connector"></div>
+
+    <!-- Paso 5 -->
+    <div class="paso-min">
+      <div class="paso-min-icon">
+        <svg viewBox="0 0 24 24">
+          <!-- Mail/envelope -->
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <span class="paso-min-num">05</span>
+      <span class="paso-min-label">Confirma<br>tu pedido</span>
     </div>
-    <div class="paso-card">
-      <div class="paso-circulo">🏠</div>
-      <p>¡Listo! Recibe<br>en casa</p>
+
+    <div class="paso-connector"></div>
+
+    <!-- Paso 6 -->
+    <div class="paso-min">
+      <div class="paso-min-icon">
+        <svg viewBox="0 0 24 24">
+          <!-- House/home -->
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9,22 9,12 15,12 15,22"/>
+        </svg>
+      </div>
+      <span class="paso-min-num">06</span>
+      <span class="paso-min-label">¡Recíbelo<br>en casa!</span>
     </div>
+
   </div>
 </section>
 
@@ -244,21 +600,38 @@
   <div class="pasos">
     <div class="paso">
       <div class="paso-num">1</div>
-      <div class="paso-icon">👀</div>
+      <div class="paso-icon-svg">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </div>
       <h3>Elige</h3>
       <p>Explora el catálogo y elige el producto ideal</p>
     </div>
     <div class="paso-flecha">→</div>
     <div class="paso">
       <div class="paso-num">2</div>
-      <div class="paso-icon">💬</div>
+      <div class="paso-icon-svg">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
       <h3>Escríbenos</h3>
       <p>Mándanos un WhatsApp con tu pedido</p>
     </div>
     <div class="paso-flecha">→</div>
     <div class="paso">
       <div class="paso-num">3</div>
-      <div class="paso-icon">🎉</div>
+      <div class="paso-icon-svg">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 12V22H4V12"/>
+          <path d="M22 7H2v5h20V7z"/>
+          <path d="M12 22V7"/>
+          <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+          <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+        </svg>
+      </div>
       <h3>¡Listo!</h3>
       <p>Coordinamos y lo entregamos con amor</p>
     </div>
@@ -270,21 +643,21 @@
 <section class="testimonios-section">
   <div class="section-header">
     <p class="section-label">Lo que dicen</p>
-    <h2>Clientes felices 💕</h2>
+    <h2>Clientes felices</h2>
   </div>
   <div class="grid-testimonios">
     <div class="testimonio">
-      <div class="estrellas">⭐⭐⭐⭐⭐</div>
+      <div class="estrellas">★★★★★</div>
       <p>"Mi novio quedó sin palabras. El desayuno llegó puntual y presentadísimo. ¡Totalmente recomendado!"</p>
       <span>— Laura M.</span>
     </div>
     <div class="testimonio">
-      <div class="estrellas">⭐⭐⭐⭐⭐</div>
+      <div class="estrellas">★★★★★</div>
       <p>"Pedí el menú con Baileys para el cumpleaños de mi mamá y lloró de la emoción. ¡Gracias!"</p>
       <span>— Andrés R.</span>
     </div>
     <div class="testimonio">
-      <div class="estrellas">⭐⭐⭐⭐⭐</div>
+      <div class="estrellas">★★★★★</div>
       <p>"La presentación es hermosa, todo fresquito y a tiempo. Ya les pedí 3 veces y nunca fallan."</p>
       <span>— Valentina G.</span>
     </div>
@@ -295,7 +668,7 @@
 <!-- CTA FINAL -->
 <section class="cta-section">
   <div class="cta-content">
-    <h2>¿Lista para sorprender? 🌸</h2>
+    <h2>¿Lista para sorprender?</h2>
     <p>Haz feliz a alguien especial hoy mismo</p>
     <div class="cta-btns">
       <a href="productos.html" class="btn-cta-primary">Ver catálogo completo</a>
@@ -312,8 +685,19 @@
 <footer id="contacto">
   <div class="footer-inner">
     <div class="footer-col">
-      <div class="footer-logo">🍓 Dulces con Amor</div>
+      <div class="footer-logo">Dulces con Amor</div>
       <p>Desayunos sorpresa en Pereira.<br>Hechos con amor, entregados con ilusión.</p>
+      <!-- Redes sociales minimalistas -->
+      <div class="footer-social">
+        <a href="https://www.instagram.com/dulcesconamor.pereira" target="_blank" class="social-pill">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="var(--marron-light)" stroke="none"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="white" stroke-width="2"/></svg>
+          Instagram
+        </a>
+        <a href="https://www.facebook.com/dulcesconamorpereira" target="_blank" class="social-pill">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          Facebook
+        </a>
+      </div>
     </div>
     <div class="footer-col">
       <h4>Navegación</h4>
@@ -330,19 +714,24 @@
     </div>
     <div class="footer-col">
       <h4>Contacto</h4>
-      <p>📍 Pereira, Colombia</p>
-      <a href="https://wa.me/573164998444" target="_blank">💬 316 499 8444</a>
-      <p>🕐 Pedidos hasta media noche</p>
+      <p>Pereira, Colombia</p>
+      <a href="https://wa.me/573164998444" target="_blank">316 499 8444</a>
+      <p>Pedidos hasta media noche</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 Dulces con Amor Pereira. Hecho con 💕</p>
+    <p>© 2025 Dulces con Amor Pereira. Hecho con amor.</p>
   </div>
 </footer>
 
-<!-- WHATSAPP FLOTANTE -->
+<!-- WHATSAPP FLOTANTE — con logo de marca -->
 <a href="https://wa.me/573164998444" class="whatsapp-float" target="_blank" title="Pedir por WhatsApp">
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <div class="wa-float-inner">
+    <div class="wa-float-wa">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </div>
+    <span class="wa-float-logo">Dulces con Amor</span>
+  </div>
 </a>
 
 <script src="js/carrito.js"></script>
